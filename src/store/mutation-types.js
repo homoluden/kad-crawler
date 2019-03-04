@@ -1,1 +1,2 @@
 export const UPDATE_FOO = 'UPDATE_FOO';
+export const UPDATE_UI_MINIMIZED = 'UPDATE_UI_MINIMIZED';

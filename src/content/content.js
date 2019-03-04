@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import App from './App';
+import store from '../store';
 
 global.browser = require('webextension-polyfill');
 
@@ -17,5 +18,6 @@ document.body.appendChild(root);
 /* eslint-disable no-new */
 new Vue({
   el: `#${rootId}`,
+  store,
   render: h => h(App),
 });
