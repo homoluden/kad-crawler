@@ -17,5 +17,12 @@
   "options_ui": {
     "page": "options/options.html",
     "chrome_style": true
-  }
+  },
+  "content_scripts": [
+    {
+      "css": ["content/content.css"],
+      "js": ["content/content.js"],
+      "matches": ["http://kad.arbitr.ru/*"]
+    }
+  ]
 }
