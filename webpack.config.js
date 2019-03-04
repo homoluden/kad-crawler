@@ -47,6 +47,10 @@ const config = {
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader?indentedSyntax'],
       },
       {
+        test: /\.less$/,
+        use: ['vue-style-loader', 'css-loader', 'less-loader'],
+      },
+      {
         test: /\.(png|jpg|gif|svg|ico)$/,
         loader: 'file-loader',
         options: {
