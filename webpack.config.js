@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const ejs = require('ejs');
+const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackShellPlugin = require('webpack-shell-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -21,6 +22,9 @@ const config = {
     filename: '[name].js',
   },
   resolve: {
+    alias: {
+      icons: path.resolve(__dirname, 'node_modules/vue-material-design-icons'),
+    },
     extensions: ['.js', '.vue'],
   },
   module: {

@@ -2,6 +2,8 @@ import Vue from 'vue';
 import App from './App';
 import store from '../store';
 
+import 'icons/styles.css';
+
 global.browser = require('webextension-polyfill');
 
 const rootId = `kadCrawler`;
