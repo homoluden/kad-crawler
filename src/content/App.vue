@@ -1,6 +1,6 @@
 <template>
-  <div class="kad-crawler--root" :class="{ minimized: this.$store.state.ui.minimized }">
-    <button v-on:click="toggleMinimized" class="toggle-root">{{ this.toggleText }}</button>
+  <div class="kad-crawler--root" :class="{ minimized: !this.$store.state.ui.rootExpanded }">
+    <button v-on:click="toggleRoot" class="toggle-root">{{ this.buttonTest }}</button>
     <accordion />
   </div>
 </template>
@@ -14,19 +14,19 @@ export default {
     Accordion,
   },
   computed: {
-    toggleText() {
-      return this.$store.state.ui.minimized ? `<<<` : `>>>`;
+    buttonTest() {
+      return !this.$store.state.ui.rootExpanded ? `<<<` : `>>>`;
     },
   },
   methods: {
-    toggleMinimized() {
-      this.$store.dispatch(`toggleMinimized`);
+    toggleRoot() {
+      this.$store.dispatch(`toggleRoot`);
     },
   },
 };
 </script>
 
-<style scoped lang="less">
+<style scoped lang="scss">
 div.kad-crawler--root {
   display: flex;
   flex-direction: column;
@@ -40,13 +40,13 @@ div.kad-crawler--root {
   background-color: rgba(0, 0, 0, 0.315);
   z-index: 2000;
 
+  &.minimized {
+    width: 64px;
+  }
+
   button.toggle-root {
     width: 100%;
     height: 32px;
   }
-}
-
-div.kad-crawler--root.minimized {
-  width: 64px;
 }
 </style>

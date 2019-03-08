@@ -1,12 +1,12 @@
 <template lang="html">
-  <section class="accordion" :class="{ minimized: this.$store.state.ui.minimized }">
-    <button class="view-toggle">
+  <section class="accordion" :class="{ minimized: !this.$store.state.ui.rootExpanded }">
+    <button class="view-toggle" v-on:click="toggleResults">
       <table-large />
     </button>
 
     <results-view />
 
-    <button class="view-toggle">
+    <button class="view-toggle" v-on:click="toggleSettings">
       <settings-outline />
     </button>
     <settings-view />
@@ -33,13 +33,19 @@
     mounted() {
 
     },
+
     data() {
       return {
 
       }
     },
     methods: {
-
+      toggleResults() {
+        this.$store.dispatch(`toggleResults`);
+      },
+      toggleSettings() {
+        this.$store.dispatch(`toggleSettings`);
+      },
     },
     computed: {
 
@@ -56,12 +62,15 @@
   display: flex;
   flex-direction: column;
   justify-content: stretch;
-}
 
-.view-toggle {
-  width: 64px - 6px;
-  height: 64px - 6px;
-  margin-top: 3px;
-  margin-left: 3px;
+  .view-toggle {
+    width: 64px - 6px;
+    height: 64px - 6px;
+    margin: 3px 10px;
+  }
+
+  &.minimized .view-toggle {
+    margin: 3px 3px;
+  }
 }
 </style>

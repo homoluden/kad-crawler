@@ -11,7 +11,9 @@ export default new Vuex.Store({
   state: {
     foo: 'bar',
     ui: {
-      minimized: true,
+      rootExpanded: false,
+      resultsExpanded: false,
+      settingsExpanded: true,
     },
   },
   getters,
