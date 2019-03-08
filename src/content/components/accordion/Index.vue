@@ -17,7 +17,7 @@
   import TableLarge from "icons/TableLarge";
   import SettingsOutline from "icons/SettingsOutline";
   import ResultsView from "./components/ResultsView";
-  import SettingsView from "./components/SettingsView";
+  import SettingsView from "./components/settings/SettingsView";
 
   export default  {
     name: 'accordion',
