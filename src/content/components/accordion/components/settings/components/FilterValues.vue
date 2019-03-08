@@ -29,11 +29,12 @@
     methods: {
       updateFilter: function() {
         const { selectors, filterValues } = this.$store.state;
-        const participant = document.querySelectorAll(selectors.participants)[0];
-        const startDate = document.querySelectorAll(selectors.startDate)[0];
-        const endDate = document.querySelectorAll(selectors.endDate)[0];
-        const court = document.querySelectorAll(selectors.court)[0];
-        const submitButton = document.querySelectorAll(selectors.submitButton)[0];
+        const participant = document.querySelector(selectors.participants);
+        const court = document.querySelector(selectors.court);
+        const addCourt = document.querySelector(selectors.addCourt);
+        const startDate = document.querySelector(selectors.startDate);
+        const endDate = document.querySelector(selectors.endDate);
+        const submitButton = document.querySelector(selectors.submitButton);
 
         if (participant) {
           participant.value = filterValues.participants;
@@ -47,15 +48,23 @@
           endDate.value = filterValues.endDate;
         }
 
-        if (submitButton) {
-          submitButton.click();
-        }
-
         if (court) {
-          const courtNames = filterValues.courts.split();
-          if (courtNames.length) {
-            court.value = courtNames[0];
-          }
+          const courtNames = filterValues.courts.split(`\n`).map(dirtyName => dirtyName.trim());
+          const timer = setInterval(() => {
+            if (!courtNames.length) {
+              clearInterval(timer);
+              if (submitButton) {
+                submitButton.click();
+              }
+              return;
+            }
+
+            const name = courtNames.shift();
+            if (addCourt) {
+              court.value = name;
+              addCourt.click();
+            }
+          }, 250);
         }
       },
     },

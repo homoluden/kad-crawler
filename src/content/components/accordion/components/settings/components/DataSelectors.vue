@@ -5,6 +5,8 @@
     <input v-model="$store.state.selectors.participants" class="selector-input" />
     <h3>Суды</h3>
     <input v-model="$store.state.selectors.court" class="selector-input" />
+    <h3>Кнопка добавления суда</h3>
+    <input v-model="$store.state.selectors.addCourt" class="selector-input" />
     <h3>Дата (от)</h3>
     <input v-model="$store.state.selectors.startDate" class="selector-input" />
     <h3>Дата (до)</h3>

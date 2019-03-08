@@ -17,6 +17,7 @@ export default new Vuex.Store({
     selectors: {
       participants: `#sug-participants > div > textarea`,
       court: `#caseCourt input[type=text]`,
+      addCourt: `#caseCourt > div > i.b-icon--courts.add`,
       startDate: `#sug-dates > label.from > input`,
       endDate: `#sug-dates > label.to > input`,
       detailsPage: `#b-cases > tbody > tr:nth-child(1) > td.num > div > a`,
@@ -61,7 +62,7 @@ export default new Vuex.Store({
 АС Ставропольский край
 АС Тамбовская область
 АС Тверская область
-АСТомская область;
+АС Томская область;
 АС Тульская область
 АС Тюменская область
 АС Ульяновская область
@@ -69,8 +70,7 @@ export default new Vuex.Store({
 АС Ярославская область
 АС города Санкт-Петербурга
 АС города Севастополя 
-АС Республики Крым
-АС города Севастополя`,
+АС Республики Крым`,
     },
   },
   getters,
