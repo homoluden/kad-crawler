@@ -32,6 +32,7 @@
         const participant = document.querySelectorAll(selectors.participants)[0];
         const startDate = document.querySelectorAll(selectors.startDate)[0];
         const endDate = document.querySelectorAll(selectors.endDate)[0];
+        const court = document.querySelectorAll(selectors.court)[0];
         const submitButton = document.querySelectorAll(selectors.submitButton)[0];
 
         if (participant) {
@@ -50,6 +51,12 @@
           submitButton.click();
         }
 
+        if (court) {
+          const courtNames = filterValues.courts.split();
+          if (courtNames.length) {
+            court.value = courtNames[0];
+          }
+        }
       },
     },
     computed: {
