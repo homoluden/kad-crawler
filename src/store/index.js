@@ -18,6 +18,8 @@ export default new Vuex.Store({
       participants: `#sug-participants > div > textarea`,
       startDate: `#sug-dates > label.from > input`,
       endDate: `#sug-dates > label.to > input`,
+      detailsPage: `#b-cases > tbody > tr:nth-child(1) > td.num > div > a`,
+      submitButton: `#b-form-submit > div > button`,
     },
     filterValues: {
       participants: `ООО`,

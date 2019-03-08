@@ -7,6 +7,10 @@
     <input v-model="$store.state.selectors.startDate" class="selector-input" />
     <h3>Дата (до)</h3>
     <input v-model="$store.state.selectors.endDate" class="selector-input" />
+    <h3>Ссылка на детали дела</h3>
+    <input v-model="$store.state.selectors.detailsPage" class="selector-input" />
+    <h3>Кнопка "Найти"</h3>
+    <input v-model="$store.state.selectors.submitButton" class="selector-input" />
   </section>
 </template>
 

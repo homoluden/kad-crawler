@@ -9,14 +9,14 @@ export const toggleRoot = ({ commit, state }) => {
 };
 
 export const toggleSettings = ({ commit, state }) => {
-  const settingsExpanded = !state.ui.settingsExpanded;
+  const settingsExpanded = true;
   const resultsExpanded = !settingsExpanded;
   commit(types.UPDATE_UI_SETTINGS_EXPANDED, settingsExpanded);
   commit(types.UPDATE_UI_RESULTS_EXPANDED, resultsExpanded);
 };
 
 export const toggleResults = ({ commit, state }) => {
-  const resultsExpanded = !state.ui.resultsExpanded;
+  const resultsExpanded = true;
   const settingsExpanded = !resultsExpanded;
   commit(types.UPDATE_UI_RESULTS_EXPANDED, resultsExpanded);
   commit(types.UPDATE_UI_SETTINGS_EXPANDED, settingsExpanded);
