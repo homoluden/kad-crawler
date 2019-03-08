@@ -1,9 +1,12 @@
 <template lang="html">
   <section class="data-selectors section-panel-2">
-    <h1>СЕЛЕКТОРЫ ФИЛЬТРОВ и ДАННЫХ</h1>
-    <h2>Участники</h2>
-    <h2>Дата (от)</h2>
-    <h2>Дата (до)</h2>
+    <h2>СЕЛЕКТОРЫ ФИЛЬТРОВ и ДАННЫХ</h2>
+    <h3>Участники</h3>
+    <input v-model="$store.state.selectors.participants" class="selector-input" />
+    <h3>Дата (от)</h3>
+    <input v-model="$store.state.selectors.startDate" class="selector-input" />
+    <h3>Дата (до)</h3>
+    <input v-model="$store.state.selectors.endDate" class="selector-input" />
   </section>
 </template>
 
@@ -34,5 +37,9 @@
 <style scoped lang="scss">
 .data-selectors {
   width: 500px;
+
+  .selector-input {
+    width: 100%;
+  }
 }
 </style>

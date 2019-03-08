@@ -2,6 +2,7 @@
   <section class="section-panel" :class="{ visible: this.$store.state.ui.rootExpanded, expanded: this.$store.state.ui.settingsExpanded }">
     <h1>НАСТРОЙКИ</h1>
     <section class="section-content">
+      <filter-values />
       <data-selectors />
       <court-filter />
     </section>
@@ -9,6 +10,7 @@
 </template>
 
 <script lang="js">
+  import FilterValues from "./components/FilterValues";
   import DataSelectors from "./components/DataSelectors.vue";
   import CourtFilter from "./components/CourtFilter.vue";
 
@@ -18,6 +20,7 @@
     name: 'settings-view',
     props: [],
     components: {
+      FilterValues,
       DataSelectors,
       CourtFilter,
     },

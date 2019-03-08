@@ -37,7 +37,7 @@ div.kad-crawler--root {
   max-height: 100vh;
   top: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.315);
+  background-color: rgba(0, 0, 0, 0.75);
   z-index: 2000;
 
   &.minimized {
