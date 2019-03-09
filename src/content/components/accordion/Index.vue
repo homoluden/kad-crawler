@@ -16,7 +16,7 @@
 <script lang="js">
   import TableLarge from "icons/TableLarge";
   import SettingsOutline from "icons/SettingsOutline";
-  import ResultsView from "./components/ResultsView";
+  import ResultsView from "./components/results/ResultsView";
   import SettingsView from "./components/settings/SettingsView";
 
   export default  {

@@ -9,6 +9,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    results: [],
     ui: {
       rootExpanded: false,
       resultsExpanded: false,

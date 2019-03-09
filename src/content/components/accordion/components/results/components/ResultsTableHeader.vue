@@ -1,14 +1,12 @@
 <template lang="html">
-  <section class="section-panel" :class="{ visible: this.$store.state.ui.rootExpanded, expanded: this.$store.state.ui.resultsExpanded }">
-    <h1>РЕЗУЛЬТАТЫ</h1>
+  <section class="results-table-header">
+    <h1>results-table-header Component</h1>
   </section>
 </template>
 
 <script lang="js">
-  import "../../../style.scss";
-
   export default  {
-    name: 'results-view',
+    name: 'results-table-header',
     props: [],
     mounted() {
 
@@ -28,6 +26,6 @@
 </script>
 
 <style scoped lang="scss">
-.section-panel {
+.results-table-header {
 }
 </style>

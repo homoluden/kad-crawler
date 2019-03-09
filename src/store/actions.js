@@ -115,4 +115,5 @@ export const parseNewResults = ({ commit, state }) => {
   });
 
   console.log(`New Results parsed:\n`, zipped);
+  commit(types.ADD_NEW_RESULTS, zipped);
 };
