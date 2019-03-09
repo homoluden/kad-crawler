@@ -27,33 +27,37 @@ export default new Vuex.Store({
           return document.querySelector('#main-column2 > div.b-results');
         },
         date: () => {
-          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.num > div > div > span').map(elm => elm.innerText);
+          return [...document.querySelectorAll('#b-cases > tbody > tr > td.num > div > div > span')].map(elm => elm.innerText.trim());
         },
 
         issueDetailsUrl: () => {
-          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.num > div > a').map(elm => elm.href);
+          return [...document.querySelectorAll('#b-cases > tbody > tr > td.num > div > a')].map(elm => elm.href);
         },
         courtName: () => {
-          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.court > div > div:nth-child(2)').map(elm => elm.innerText);
+          return [...document.querySelectorAll('#b-cases > tbody > tr > td.court > div > div:nth-child(2)')].map(elm => elm.innerText.trim());
         },
         claimant: () => {
-          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.plaintiff > div > div > span').map(elm => elm.innerText);
+          return [...document.querySelectorAll('#b-cases > tbody > tr > td.plaintiff > div > div > span')].map(elm => elm.innerText.trim());
         },
         claimantAddress: () => {
-          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.plaintiff > div > div > span > span').map(elm => elm.innerText.split(`\n`)[1]);
+          return [...document.querySelectorAll('#b-cases > tbody > tr > td.plaintiff > div > div > span > span')].map(elm => (elm.innerText.split(`\n`)[1] || ``).trim());
         },
 
         claimantInn: () => {
-          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.plaintiff > div > div > span > span > div').map(elm => elm.innerText);
+          return [...document.querySelectorAll('#b-cases > tbody > tr > td.plaintiff > div > div > span > span > div')].map(elm => elm.innerText.trim().replace(`ИНН: `, ``));
         },
         defendant: () => {
-          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.respondent > div > div > span').map(elm => elm.innerText);
+          return [...document.querySelectorAll('#b-cases > tbody > tr > td.respondent > div > div > span')].map(elm => elm.innerText.trim());
         },
         defendantAddress: () => {
-          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.respondent > div > div > span > span.js-rolloverHtml').map(elm => elm.innerText.split(`\n`)[1]);
+          return [...document.querySelectorAll('#b-cases > tbody > tr > td.respondent > div > div > span > span.js-rolloverHtml')].map(elm =>
+            (elm.innerText.split(`\n`)[1] || ``).trim()
+          );
         },
         defendantInn: () => {
-          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.respondent > div > div > span > span.js-rolloverHtml > div').map(elm => elm.innerText);
+          return [...document.querySelectorAll('#b-cases > tbody > tr > td.respondent > div > div > span > span.js-rolloverHtml > div')].map(elm =>
+            elm.innerText.trim().replace(`ИНН: `, ``)
+          );
         },
       },
     },

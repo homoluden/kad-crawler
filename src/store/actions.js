@@ -88,5 +88,31 @@ export const applyFilter = ({ state }) => {
 };
 
 export const parseNewResults = ({ commit, state }) => {
-  console.warn(`Action "parseNewResults" not implemented!`);
+  const { date, issueDetailsUrl, courtName, claimant, claimantAddress, claimantInn, defendant, defendantAddress, defendantInn } = state.selectors.dataQueries;
+
+  const dateItems = date();
+  const urls = issueDetailsUrl();
+  const courtNames = courtName();
+  const claimants = claimant();
+  const claimantAddresses = claimantAddress();
+  const claimantInns = claimantInn();
+  const defendants = defendant();
+  const defendantAddresses = defendantAddress();
+  const defendantInns = defendantInn();
+
+  const zipped = dateItems.map((date, i) => {
+    return {
+      date,
+      url: urls[i],
+      courtName: courtNames[i],
+      claimant: claimants[i],
+      claimantAddress: claimantAddresses[i],
+      claimantInn: claimantInns[i],
+      defendant: defendants[i],
+      defendantAddress: defendantAddresses[i],
+      defendantInn: defendantInns[i],
+    };
+  });
+
+  console.log(`New Results parsed:\n`, zipped);
 };
