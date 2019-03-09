@@ -7,6 +7,9 @@ export default {
   [types.UPDATE_UI_ROOT_EXPANDED](state, payload) {
     state.ui.rootExpanded = payload;
   },
+  [types.UPDATE_UI_RESULTS_EXPANDED](state, payload) {
+    state.ui.resultsExpanded = payload;
+  },
   [types.UPDATE_UI_SETTINGS_EXPANDED](state, payload) {
     state.ui.settingsExpanded = payload;
   },
