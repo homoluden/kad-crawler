@@ -13,6 +13,7 @@ export default new Vuex.Store({
       rootExpanded: false,
       resultsExpanded: false,
       settingsExpanded: true,
+      domObserver: null,
     },
     selectors: {
       participants: `#sug-participants > div > textarea`,

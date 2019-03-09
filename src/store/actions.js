@@ -22,6 +22,71 @@ export const toggleResults = ({ commit, state }) => {
   commit(types.UPDATE_UI_SETTINGS_EXPANDED, settingsExpanded);
 };
 
+export const createDomObserver = ({ dispatch, commit, state }) => {
+  const mutationObserver = new MutationObserver(() => {
+    console.log(`Results updated. New results parsing started...`);
+    dispatch(`parseNewResults`);
+  });
+
+  const resultsContainer = state.selectors.dataQueries.resultsContainer();
+  if (resultsContainer) {
+    mutationObserver.observe(resultsContainer, {
+      attributes: false,
+      characterData: false,
+      childList: true,
+      subtree: true,
+      attributeOldValue: false,
+      characterDataOldValue: false,
+    });
+
+    commit(types.UPDATE_DOM_OBSERVER);
+  } else {
+    console.warn(`Results Container not found!`);
+  }
+};
+
+export const applyFilter = ({ state }) => {
+  const { selectors, filterValues } = state;
+  const participant = document.querySelector(selectors.participants);
+  const court = document.querySelector(selectors.court);
+  const addCourt = document.querySelector(selectors.addCourt);
+  const startDate = document.querySelector(selectors.startDate);
+  const endDate = document.querySelector(selectors.endDate);
+  const submitButton = document.querySelector(selectors.submitButton);
+
+  if (participant) {
+    participant.value = filterValues.participants;
+  }
+
+  if (startDate) {
+    startDate.value = filterValues.startDate;
+  }
+
+  if (endDate) {
+    endDate.value = filterValues.endDate;
+  }
+
+  if (court) {
+    const courtNames = filterValues.courts.split(`\n`).map(dirtyName => dirtyName.trim());
+    const timer = setInterval(() => {
+      if (!courtNames.length) {
+        clearInterval(timer);
+        if (submitButton) {
+          submitButton.click();
+        }
+
+        return;
+      }
+
+      const name = courtNames.shift();
+      if (addCourt) {
+        court.value = name;
+        addCourt.click();
+      }
+    }, 250);
+  }
+};
+
 export const parseNewResults = ({ commit, state }) => {
   console.warn(`Action "parseNewResults" not implemented!`);
 };
