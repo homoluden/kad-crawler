@@ -13,12 +13,12 @@ $sp2Height: 97%;
   h1,
   h2,
   h3 {
-    font-size: x-large;
+    font-size: large;
     color: rgba($color: #daa453, $alpha: 1);
   }
 
   h2 {
-    font-size: large;
+    font-size: larger;
   }
 
   &.visible {
@@ -43,12 +43,12 @@ $sp2Height: 97%;
 
   h2 {
     text-align: center;
-    font-size: large;
+    font-size: medium;
   }
 
   h3 {
     text-align: left;
-    font-size: larger;
+    font-size: medium;
     margin-top: 5px;
   }
 
