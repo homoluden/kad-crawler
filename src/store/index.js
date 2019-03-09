@@ -20,8 +20,41 @@ export default new Vuex.Store({
       addCourt: `#caseCourt > div > i.b-icon--courts.add`,
       startDate: `#sug-dates > label.from > input`,
       endDate: `#sug-dates > label.to > input`,
-      detailsPage: `#b-cases > tbody > tr:nth-child(1) > td.num > div > a`,
       submitButton: `#b-form-submit > div > button`,
+      dataQueries: {
+        resultsContainer: () => {
+          return document.querySelector('#main-column2 > div.b-results');
+        },
+        date: () => {
+          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.num > div > div > span').map(elm => elm.innerText);
+        },
+
+        issueDetailsUrl: () => {
+          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.num > div > a').map(elm => elm.href);
+        },
+        courtName: () => {
+          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.court > div > div:nth-child(2)').map(elm => elm.innerText);
+        },
+        claimant: () => {
+          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.plaintiff > div > div > span').map(elm => elm.innerText);
+        },
+        claimantAddress: () => {
+          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.plaintiff > div > div > span > span').map(elm => elm.innerText.split(`\n`)[1]);
+        },
+
+        claimantInn: () => {
+          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.plaintiff > div > div > span > span > div').map(elm => elm.innerText);
+        },
+        defendant: () => {
+          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.respondent > div > div > span').map(elm => elm.innerText);
+        },
+        defendantAddress: () => {
+          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.respondent > div > div > span > span.js-rolloverHtml').map(elm => elm.innerText.split(`\n`)[1]);
+        },
+        defendantInn: () => {
+          return document.querySelectorAll('#b-cases > tbody > tr:nth-child(1) > td.respondent > div > div > span > span.js-rolloverHtml > div').map(elm => elm.innerText);
+        },
+      },
     },
     filterValues: {
       participants: `ООО`,

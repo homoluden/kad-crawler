@@ -19,11 +19,31 @@
     name: 'filter-values',
     props: [],
     mounted() {
+      const store = this.$store;
+      const mutationObserver = new MutationObserver(function(mutations) {
+        console.log(`Results updated. New results parsing started...`);
+        store.dispatch(`parseNewResults`);
+      });
+
+      this.domObserver = mutationObserver;
+      const resultsContainer = this.$store.state.selectors.dataQueries.resultsContainer();
+      if (resultsContainer) {
+        this.domObserver.observe(resultsContainer, {
+          attributes: false,
+          characterData: false,
+          childList: true,
+          subtree: true,
+          attributeOldValue: false,
+          characterDataOldValue: false
+        });
+      } else {
+        console.warn(`Results Container not found!`);
+      }
 
     },
     data() {
       return {
-
+        domObserver: null,
       }
     },
     methods: {
@@ -56,6 +76,7 @@
               if (submitButton) {
                 submitButton.click();
               }
+
               return;
             }
 

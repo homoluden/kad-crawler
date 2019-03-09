@@ -21,3 +21,7 @@ export const toggleResults = ({ commit, state }) => {
   commit(types.UPDATE_UI_RESULTS_EXPANDED, resultsExpanded);
   commit(types.UPDATE_UI_SETTINGS_EXPANDED, settingsExpanded);
 };
+
+export const parseNewResults = ({ commit, state }) => {
+  console.warn(`Action "parseNewResults" not implemented!`);
+};
