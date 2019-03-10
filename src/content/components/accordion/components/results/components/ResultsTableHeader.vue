@@ -1,6 +1,6 @@
 <template lang="html">
   <section class="results-table-row header">
-    <div class="table-cell">Дело № (дата)</div>
+    <div class="table-cell">Дело №</div>
     <div class="table-cell medium">Суд</div>
     <div class="table-cell medium">Истец</div>
     <div class="table-cell big">Адрес истца, ИНН</div>

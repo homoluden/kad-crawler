@@ -10,6 +10,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     results: [],
+    currentPage: 1,
     ui: {
       rootExpanded: false,
       resultsExpanded: false,
@@ -59,6 +60,12 @@ export default new Vuex.Store({
           return [...document.querySelectorAll('#b-cases > tbody > tr > td.respondent > div > div > span > span.js-rolloverHtml > div')].map(elm =>
             elm.innerText.trim().replace(`ИНН: `, ``)
           );
+        },
+        pagerLinks: idx => {
+          const links = [...document.querySelectorAll(`#pages > li > a`)];
+          const link = links.find(l => l.getAttribute(`href`) === `#page${idx}`);
+          console.info(`Next page link: `, link);
+          return link;
         },
       },
     },

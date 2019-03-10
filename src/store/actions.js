@@ -87,7 +87,7 @@ export const applyFilter = ({ state }) => {
   }
 };
 
-export const parseNewResults = ({ commit, state }) => {
+export const parseNewResults = ({ state, commit, dispatch }) => {
   const { date, issueDetailsUrl, courtName, claimant, claimantAddress, claimantInn, defendant, defendantAddress, defendantInn } = state.selectors.dataQueries;
 
   const dateItems = date();
@@ -116,4 +116,17 @@ export const parseNewResults = ({ commit, state }) => {
 
   console.log(`New Results parsed:\n`, zipped);
   commit(types.ADD_NEW_RESULTS, zipped);
+
+  setTimeout(() => {
+    dispatch(`activateNextPage`);
+  }, 200);
+};
+
+export const activateNextPage = ({ state, commit }) => {
+  const idx = state.currentPage + 1;
+  const link = state.selectors.dataQueries.pagerLinks(idx);
+  if (link) {
+    commit(types.SET_CURRENT_PAGE, idx);
+    link.click();
+  }
 };

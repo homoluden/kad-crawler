@@ -22,4 +22,7 @@ export default {
       state.results = state.results.concat(payload);
     }
   },
+  [types.SET_CURRENT_PAGE](state, payload) {
+    state.currentPage = payload;
+  },
 };
