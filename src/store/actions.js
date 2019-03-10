@@ -45,7 +45,7 @@ export const createDomObserver = ({ dispatch, commit, state }) => {
   }
 };
 
-export const applyFilter = ({ state }) => {
+export const applyFilter = ({ state, getters }) => {
   const { selectors, filterValues } = state;
   const participant = document.querySelector(selectors.participants);
   const court = document.querySelector(selectors.court);
@@ -59,11 +59,11 @@ export const applyFilter = ({ state }) => {
   }
 
   if (startDate) {
-    startDate.value = filterValues.startDate;
+    startDate.value = getters.startDate;
   }
 
   if (endDate) {
-    endDate.value = filterValues.endDate;
+    endDate.value = getters.endDate;
   }
 
   if (court) {

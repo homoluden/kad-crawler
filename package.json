@@ -1,6 +1,6 @@
 {
   "name": "kad-crawler",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Chrome extension for grabbing data from kad.arbitr.ru.",
   "author": "Alexey S. Matveev <as.luden@gmail.com>",
   "license": "MIT",

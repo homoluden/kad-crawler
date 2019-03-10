@@ -71,8 +71,6 @@ export default new Vuex.Store({
     },
     filterValues: {
       participants: `ООО`,
-      startDate: `04.03.2019`,
-      endDate: `07.03.2019`,
       courts: `АС Алтайского края
 АС Архангельской области
 АС Астраханской области

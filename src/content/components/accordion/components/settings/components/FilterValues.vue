@@ -3,10 +3,6 @@
     <h2>ЗНАЧЕНИЯ ФИЛЬТРОВ</h2>
     <h3>Участники</h3>
     <input v-model="$store.state.filterValues.participants" class="selector-input" />
-    <h3>Дата (от)</h3>
-    <input v-model="$store.state.filterValues.startDate" class="selector-input" />
-    <h3>Дата (до)</h3>
-    <input v-model="$store.state.filterValues.endDate" class="selector-input" />
 
     <section class="spacer" />
 
