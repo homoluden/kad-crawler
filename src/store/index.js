@@ -32,7 +32,7 @@ export default new Vuex.Store({
         },
 
         issueDetailsUrl: () => {
-          return [...document.querySelectorAll('#b-cases > tbody > tr > td.num > div > a')].map(elm => elm.href);
+          return [...document.querySelectorAll('#b-cases > tbody > tr > td.num > div > a')].map(elm => ({ href: elm.href, text: elm.innerText }));
         },
         courtName: () => {
           return [...document.querySelectorAll('#b-cases > tbody > tr > td.court > div > div:nth-child(2)')].map(elm => elm.innerText.trim());

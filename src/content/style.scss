@@ -58,3 +58,24 @@ $sp2Height: 97%;
     min-width: $sp2Width - 10px;
   }
 }
+
+.results-table-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+
+  .table-cell {
+    width: 8%;
+    padding: 3px;
+    margin: 0 -0.5px;
+    border: 1px solid rgb(39, 45, 48);
+  }
+
+  .table-cell.medium {
+    width: 14%;
+  }
+
+  .table-cell.big {
+    width: 25%;
+  }
+}

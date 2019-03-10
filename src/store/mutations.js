@@ -19,7 +19,7 @@ export default {
   [types.ADD_NEW_RESULTS](state, payload) {
     console.warn(`${types.ADD_NEW_RESULTS} not implemented!`);
     if (payload.length) {
-      state.results.concat(payload);
+      state.results = state.results.concat(payload);
     }
   },
 };

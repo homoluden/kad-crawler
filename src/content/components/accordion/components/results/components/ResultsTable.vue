@@ -1,8 +1,9 @@
 <template lang="html">
   <section class="results-table">
     <results-table-header />
-    <ul v-if="resultsAvailable" />
-    <result-row />
+    <ul v-if="resultsAvailable">
+      <li is="result-row" v-for="(result, index) in $store.state.results" v-bind:key="result.url.text" v-bind:index="index" v-bind:data="result" />
+    </ul>
   </section>
 </template>
 
@@ -50,5 +51,9 @@
   color: rgb(50, 56, 61);
   border: 1px solid rgb(39, 45, 48);
   border-radius: 5px;
+
+  ul {
+    overflow-y: overlay;
+  }
 }
 </style>
