@@ -127,13 +127,10 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
 
   setTimeout(() => {
     dispatch(`activateNextPage`);
-  }, 300);
+  }, 5500);
 };
 
 export const activateNextPage = ({ state, commit }) => {
-  // TODO: remove after BAN issue worked around
-  return;
-
   const idx = state.currentPage + 1;
   const link = state.selectors.dataQueries.pagerLinks(idx);
   if (link) {
