@@ -24,6 +24,11 @@
       "css": ["content/content.css"],
       "js": ["content/content.js"],
       "matches": ["*://kad.arbitr.ru/*"]
+    },
+    {
+      "css": [],
+      "js": ["contactsContent/contactsContent.js"],
+      "matches": ["*://www.list-org.com/*"]
     }
   ]
 }

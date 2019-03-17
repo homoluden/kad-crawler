@@ -16,6 +16,7 @@ const config = {
     'popup/popup': './popup/popup.js',
     'options/options': './options/options.js',
     'content/content': './content/content.js',
+    'contactsContent/contactsContent': './contactsContent/contactsContent.js',
   },
   output: {
     path: __dirname + '/dist',
