@@ -115,9 +115,11 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
       claimant: claimants[i],
       claimantAddress: claimantAddresses[i],
       claimantInn: claimantInns[i],
+      claimantContacts: null,
       defendant: defendants[i],
       defendantAddress: defendantAddresses[i],
       defendantInn: defendantInns[i],
+      defendantContacts: null,
     };
   });
 
@@ -141,4 +143,8 @@ export const activateNextPage = ({ state, commit }) => {
     console.info(`Next Page link not found. Data extraction stopped!`);
     chrome.extension.sendMessage({ message: `All pages grabbed! ` });
   }
+};
+
+export const updateContacts = ({ state, commit }, payload) => {
+  commit(types.UPDATE_CONTACTS, payload);
 };

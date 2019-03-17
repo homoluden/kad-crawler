@@ -16,6 +16,23 @@ export default {
   [types.UPDATE_DOM_OBSERVER](state, payload) {
     state.ui.domObserver = payload;
   },
+  [types.UPDATE_CONTACTS](state, payload) {
+    const { inn: innToUpdate, contacts } = payload;
+    const recordsWithInn = [];
+    state.results.forEach(r => {
+      if (r.claimantInn === innToUpdate || r.defendantInn === innToUpdate) {
+        recordsWithInn.push(r);
+
+        if (r.claimantInn === innToUpdate) {
+          r.claimantContacts = contacts;
+        }
+        if (r.defendantInn === innToUpdate) {
+          r.defendantContacts = contacts;
+        }
+      }
+    });
+    console.info(`[Main Tab] Records with INN given: `, recordsWithInn);
+  },
   [types.ADD_NEW_RESULTS](state, payload) {
     if (payload.length) {
       state.results = state.results.concat(payload);
