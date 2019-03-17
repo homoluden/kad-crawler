@@ -17,6 +17,7 @@ const config = {
     'options/options': './options/options.js',
     'content/content': './content/content.js',
     'contactsContent/contactsContent': './contactsContent/contactsContent.js',
+    'contactsContent/details': './contactsContent/details.js',
   },
   output: {
     path: __dirname + '/dist',

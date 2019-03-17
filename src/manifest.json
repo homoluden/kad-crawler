@@ -29,6 +29,11 @@
       "css": [],
       "js": ["contactsContent/contactsContent.js"],
       "matches": ["*://www.list-org.com/*"]
+    },
+    {
+      "css": [],
+      "js": ["contactsContent/details.js"],
+      "matches": ["*://www.list-org.com/company/*"]
     }
   ]
 }

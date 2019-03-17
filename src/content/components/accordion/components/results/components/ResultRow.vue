@@ -9,14 +9,14 @@
     <div class="table-cell big inn">
       {{ claimantAddress }}
       <span>ИНН: {{ claimantInn }}</span>
-      <button v-if="!$props.data.claimantContacts" v-on:click="() => this.queryContacts(claimantInn)">Контакты</button>
+      <button v-if="!$props.data.claimantContacts" v-on:click="() => this.queryContacts($props.data.claimantInn)">Контакты</button>
       <span v-if="$props.data.claimantContacts">Т.: {{ $props.data.claimantContacts.phoneNumbers }}</span>
     </div>
     <div class="table-cell medium">{{ defendant }}</div>
     <div class="table-cell big inn">
       {{ defendantAddress }}
       <span>ИНН: {{ defendantInn }}</span>
-      <button v-if="!$props.data.defendantContacts" v-on:click="() => this.queryContacts(defendantInn)">Контакты</button>
+      <button v-if="!$props.data.defendantContacts" v-on:click="() => this.queryContacts($props.data.defendantInn)">Контакты</button>
       <span v-if="$props.data.defendantContacts">Т.: {{ $props.data.defendantContacts.phoneNumbers }}</span>
     </div>
   </section>
