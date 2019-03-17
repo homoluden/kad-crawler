@@ -42,9 +42,8 @@
         chrome.runtime.sendMessage(
           {
             request: tabRequests.queryContacts,
-            data: { inn: inn }
-          },
-          (data) => { this.contacts = data; }
+            data: { inn }
+          }
         );
       },
     },

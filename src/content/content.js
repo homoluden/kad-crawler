@@ -26,3 +26,11 @@ new Vue({
   store,
   render: h => h(App),
 });
+
+chrome.runtime.onMessage.addListener((message, sender) => {
+  console.info(`Main Tab received message: `, { message, sender });
+
+  if (message.request === tabRequests.processContacts) {
+    console.info(`Starting to process received contacts... `, { message });
+  }
+});

@@ -36,7 +36,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       } else {
         queryContacts(message.data, sendResponse);
       }
+      break;
+    case tabRequests.processContacts:
+      const { id: mainTabId } = tabs.main || {};
+      if (!mainTabId) {
+        break;
+      }
 
+      const { inn } = message.data;
+      chrome.tabs.sendMessage(tabs.main.id, { request: tabRequests.processContacts, inn, data: message.data });
       break;
     default:
       break;
@@ -68,25 +76,11 @@ function queryContacts(data, sendResponse) {
 
         console.info(`Contacts Tab status: ${contactsTab.status}`, { contactsTab });
         if (contactsTab.status === `complete`) {
-          chrome.tabs.sendRequest(contactsTab.id, { inn: data.inn }, response => {
-            sendResponse(response);
-          });
+          chrome.tabs.sendMessage(contactsTab.id, { inn: data.inn });
           clearInterval(loadingTimer);
           console.log(`Contacts poll stopped.`);
         }
       });
     }, 1000);
-  }
-}
-
-function contactLoaded(inn, data, sendResponse) {
-  console.info(`Contact Loaded: `, { inn, data });
-  const { main } = tabs;
-  if (sendResponse) {
-    sendResponse({ inn, data });
-  } else if (main) {
-    main.sendMessage({ inn, data });
-  } else {
-    console.warn(`Cannot process loaded contacts. No handlers available!`);
   }
 }
