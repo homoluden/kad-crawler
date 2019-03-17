@@ -1,24 +1,27 @@
 <template lang="html">
   <section class="results-table-row">
     <div class="table-cell date">
-      {{ data.date }}
-      <a v-bind:href="data.url.href">{{ data.url.text }}</a>
+      {{ date }}
+      <a v-bind:href="url.href">{{ url.text }}</a>
     </div>
-    <div class="table-cell medium">{{ data.courtName }}</div>
-    <div class="table-cell medium">{{ data.claimant }}</div>
+    <div class="table-cell medium">{{ courtName }}</div>
+    <div class="table-cell medium">{{ claimant }}</div>
     <div class="table-cell big inn">
-      {{ data.claimantAddress }}
-      <span>ИНН: {{ data.claimantInn }}</span>
+      {{ claimantAddress }}
+      <span>ИНН: {{ claimantInn }}</span>
     </div>
-    <div class="table-cell medium">{{ data.defendant }}</div>
+    <div class="table-cell medium">{{ defendant }}</div>
     <div class="table-cell big inn">
-      {{ data.defendantAddress }}
-      <span>ИНН: {{ data.defendantInn }}</span>
+      {{ defendantAddress }}
+      <span>ИНН: {{ defendantInn }}</span>
+      <button v-if="!contacts" v-on:click="() => this.queryContacts(defendantInn)">Контакты</button>
+      <span v-if="contacts">Т.: {{ contacts.phoneNumbers }}</span>
     </div>
   </section>
 </template>
 
 <script lang="js">
+  import { tabRequests } from '../../../../../../constants/tabs';
 
   import "../../../../../style.scss";
 
@@ -30,10 +33,20 @@
     },
     data() {
       return {
+        contacts: null,
+        ...this.$props.data
       }
     },
     methods: {
-
+      queryContacts: function(inn) {
+        chrome.runtime.sendMessage(
+          {
+            request: tabRequests.queryContacts,
+            data: { inn: inn }
+          },
+          (data) => { this.contacts = data; }
+        );
+      },
     },
     computed: {
 

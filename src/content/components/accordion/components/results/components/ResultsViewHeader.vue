@@ -5,7 +5,7 @@
     <div class="buttons">
       <button v-on:click="loadMainData">Получить осн. данные</button>
       <button>Суммы исков</button>
-      <button v-on:click="queryContacts">Контакты</button>
+      <!-- <button v-on:click="queryContacts">Контакты</button> -->
     </div>
   </section>
 </template>
@@ -27,17 +27,6 @@
     methods: {
       loadMainData: function() {
         this.$store.dispatch(`applyFilter`);
-      },
-      queryContacts: function() {
-        chrome.runtime.sendMessage(
-          {
-            request: tabRequests.queryContacts,
-            data: {
-              inns: this.$store.state.results.map(r => r.claimantInn)
-                .concat(this.$store.state.results.map(r => r.defendantInn))
-            }
-          }
-        );
       },
     },
     computed: {

@@ -32,12 +32,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     case tabRequests.queryContacts:
       if (!tabs.contacts) {
-        chrome.tabs.create({ url: `http://www.list-org.com/?search=inn` });
-        setTimeout(() => {
-          queryContacts(message.data);
-        }, 1000);
+        createTabAndQueryContacts(message.data, sendResponse);
       } else {
-        queryContacts(message.data);
+        queryContacts(message.data, sendResponse);
       }
 
       break;
@@ -46,20 +43,50 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-function queryContacts(data) {
-  console.warn(`Routine 'queryContacts' is not implemented!`);
-  console.info(`Claimant and Defendant IDs:`, { ...data });
+function createTabAndQueryContacts(data, sendResponse) {
+  chrome.tabs.create({ url: `http://www.list-org.com/search?type=inn&val=${data.inn}`, active: false }, tab => {
+    tabs.contacts = tab;
+    console.info(`Contacts Tab created.`, tab);
+    setTimeout(() => {
+      queryContacts(data, sendResponse);
+    }, 1000);
+  });
+}
 
+function queryContacts(data, sendResponse) {
+  console.info(`INN:`, { ...data });
   const { contacts } = tabs;
   if (contacts) {
-    contacts.sendMessage({ request: tabRequests.queryContacts, data }, contactLoaded);
+    const loadingTimer = setInterval(() => {
+      chrome.tabs.get(contacts.id, contactsTab => {
+        if (!contactsTab) {
+          clearInterval(loadingTimer);
+          tabs.contacts = null;
+          createTabAndQueryContacts(data, sendResponse);
+          return;
+        }
+
+        console.info(`Contacts Tab status: ${contactsTab.status}`, { contactsTab });
+        if (contactsTab.status === `complete`) {
+          chrome.tabs.sendRequest(contactsTab.id, { inn: data.inn }, response => {
+            sendResponse(response);
+          });
+          clearInterval(loadingTimer);
+          console.log(`Contacts poll stopped.`);
+        }
+      });
+    }, 1000);
   }
 }
 
-function contactLoaded(inn, data) {
+function contactLoaded(inn, data, sendResponse) {
   console.info(`Contact Loaded: `, { inn, data });
   const { main } = tabs;
-  if (main) {
+  if (sendResponse) {
+    sendResponse({ inn, data });
+  } else if (main) {
     main.sendMessage({ inn, data });
+  } else {
+    console.warn(`Cannot process loaded contacts. No handlers available!`);
   }
 }
