@@ -1,5 +1,5 @@
 import * as types from './mutation-types';
-import store from '.';
+//import store from '.';
 
 export const setFoo = ({ commit }, payload) => {
   commit(types.UPDATE_FOO, payload);
@@ -9,14 +9,14 @@ export const toggleRoot = ({ commit, state }) => {
   commit(types.UPDATE_UI_ROOT_EXPANDED, !state.ui.rootExpanded);
 };
 
-export const toggleSettings = ({ commit, state }) => {
+export const toggleSettings = ({ commit }) => {
   const settingsExpanded = true;
   const resultsExpanded = !settingsExpanded;
   commit(types.UPDATE_UI_SETTINGS_EXPANDED, settingsExpanded);
   commit(types.UPDATE_UI_RESULTS_EXPANDED, resultsExpanded);
 };
 
-export const toggleResults = ({ commit, state }) => {
+export const toggleResults = ({ commit }) => {
   const resultsExpanded = true;
   const settingsExpanded = !resultsExpanded;
   commit(types.UPDATE_UI_RESULTS_EXPANDED, resultsExpanded);

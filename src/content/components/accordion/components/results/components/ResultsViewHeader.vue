@@ -11,8 +11,6 @@
 </template>
 
 <script lang="js">
-  import { tabRequests } from '../../../../../../constants/tabs';
-
   export default  {
     name: 'results-view-header',
     props: [],

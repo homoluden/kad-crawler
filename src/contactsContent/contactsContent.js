@@ -1,4 +1,4 @@
-import { tabRequests, tabNames } from '../constants/tabs';
+import { tabRequests } from '../constants/tabs';
 
 global.browser = require('webextension-polyfill');
 
@@ -7,7 +7,15 @@ const params = new URLSearchParams(url.search);
 const inn = params.get('val');
 console.info(`Contacts page loaded.`);
 if (inn) {
-  chrome.runtime.sendMessage({ request: tabRequests.processContacts, data: { inn, phoneNumbers: `` } });
+  chrome.runtime.sendMessage({
+    request: tabRequests.processContacts,
+    data: {
+      inn,
+      contacts: {
+        phoneNumbers: ``,
+      },
+    },
+  });
 }
 
 chrome.runtime.onMessage.addListener((message, sender) => {
