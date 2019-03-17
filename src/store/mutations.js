@@ -17,12 +17,17 @@ export default {
     state.ui.domObserver = payload;
   },
   [types.ADD_NEW_RESULTS](state, payload) {
-    console.warn(`${types.ADD_NEW_RESULTS} not implemented!`);
     if (payload.length) {
       state.results = state.results.concat(payload);
     }
   },
+  [types.CLEAR_RESULTS](state) {
+    state.results = [];
+  },
   [types.SET_CURRENT_PAGE](state, payload) {
     state.currentPage = payload;
+  },
+  [types.SET_COURTS_FILLED](state, payload) {
+    state.courtsFilled = payload;
   },
 };

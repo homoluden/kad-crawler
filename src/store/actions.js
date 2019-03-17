@@ -1,4 +1,5 @@
 import * as types from './mutation-types';
+import store from '.';
 
 export const setFoo = ({ commit }, payload) => {
   commit(types.UPDATE_FOO, payload);
@@ -45,7 +46,8 @@ export const createDomObserver = ({ dispatch, commit, state }) => {
   }
 };
 
-export const applyFilter = ({ state, getters }) => {
+export const applyFilter = ({ state, commit }) => {
+  commit(types.CLEAR_RESULTS);
   const { selectors, filterValues } = state;
   const participant = document.querySelector(selectors.participants);
   const court = document.querySelector(selectors.court);
@@ -59,17 +61,18 @@ export const applyFilter = ({ state, getters }) => {
   }
 
   if (startDate) {
-    startDate.value = getters.startDate;
+    startDate.value = state.filterValues.dateFrom;
   }
 
   if (endDate) {
-    endDate.value = getters.endDate;
+    endDate.value = state.filterValues.dateTo;
   }
 
-  if (court) {
+  if (court && !state.courtsFilled) {
     const courtNames = filterValues.courts.split(`\n`).map(dirtyName => dirtyName.trim());
     const timer = setInterval(() => {
       if (!courtNames.length) {
+        commit(types.SET_COURTS_FILLED, true);
         clearInterval(timer);
         if (submitButton) {
           submitButton.click();
@@ -84,6 +87,10 @@ export const applyFilter = ({ state, getters }) => {
         addCourt.click();
       }
     }, 250);
+  } else {
+    if (submitButton) {
+      submitButton.click();
+    }
   }
 };
 
@@ -114,19 +121,24 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
     };
   });
 
-  console.log(`New Results parsed:\n`, zipped);
   commit(types.ADD_NEW_RESULTS, zipped);
 
   setTimeout(() => {
     dispatch(`activateNextPage`);
-  }, 200);
+  }, 300);
 };
 
 export const activateNextPage = ({ state, commit }) => {
+  // TODO: remove after BAN issue worked around
+  return;
+
   const idx = state.currentPage + 1;
   const link = state.selectors.dataQueries.pagerLinks(idx);
   if (link) {
     commit(types.SET_CURRENT_PAGE, idx);
     link.click();
+  } else {
+    console.info(`Next Page link not found. Data extraction stopped!`);
+    chrome.extension.sendMessage({ message: `All pages grabbed! ` });
   }
 };

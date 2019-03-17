@@ -7,6 +7,7 @@
     "48": "icons/icon_48.png",
     "128": "icons/icon_128.png"
   },
+  "permissions": ["tabs"],
   "browser_action": {
     "default_title": "kad-crawler",
     "default_popup": "popup/popup.html"
@@ -22,7 +23,7 @@
     {
       "css": ["content/content.css"],
       "js": ["content/content.js"],
-      "matches": ["http://kad.arbitr.ru/*"]
+      "matches": ["*://kad.arbitr.ru/*"]
     }
   ]
 }

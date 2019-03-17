@@ -3,10 +3,12 @@
     <h2>ЗНАЧЕНИЯ ФИЛЬТРОВ</h2>
     <h3>Участники</h3>
     <input v-model="$store.state.filterValues.participants" class="selector-input" />
+    <h3>Дата От</h3>
+    <input v-model="$store.state.filterValues.dateFrom" class="selector-input" />
+    <h3>Дата Gj</h3>
+    <input v-model="$store.state.filterValues.dateTo" class="selector-input" />
 
     <section class="spacer" />
-
-    <button class="update-filter" v-on:click="applyFilter">ПРИМЕНИТЬ ФИЛЬТР</button>
   </section>
 </template>
 
@@ -23,9 +25,6 @@
       }
     },
     methods: {
-      applyFilter: function() {
-        this.$store.dispatch(`applyFilter`);
-      },
     },
     computed: {
 
@@ -37,11 +36,6 @@
 .filter-values {
   .spacer {
     height: 100%;
-  }
-
-  .update-filter {
-    width: 100%;
-    height: 48px;
   }
 }
 </style>
