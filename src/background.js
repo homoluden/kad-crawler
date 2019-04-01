@@ -1,9 +1,9 @@
-import store from './store';
+// import store from './store';
 import { tabNames, tabRequests } from './constants/tabs';
 
 global.browser = require('webextension-polyfill');
 
-alert(`Hello ${store.getters.foo}!`);
+// alert(`Hello ${store.getters.foo}!`);
 
 const tabs = {
   main: null,

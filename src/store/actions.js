@@ -1,5 +1,5 @@
 import * as types from './mutation-types';
-//import store from '.';
+// import store from '.';
 
 export const setFoo = ({ commit }, payload) => {
   commit(types.UPDATE_FOO, payload);
@@ -49,16 +49,11 @@ export const createDomObserver = ({ dispatch, commit, state }) => {
 export const applyFilter = ({ state, commit }) => {
   commit(types.CLEAR_RESULTS);
   const { selectors, filterValues } = state;
-  const participant = document.querySelector(selectors.participants);
   const court = document.querySelector(selectors.court);
   const addCourt = document.querySelector(selectors.addCourt);
   const startDate = document.querySelector(selectors.startDate);
   const endDate = document.querySelector(selectors.endDate);
   const submitButton = document.querySelector(selectors.submitButton);
-
-  if (participant) {
-    participant.value = filterValues.participants;
-  }
 
   if (startDate) {
     startDate.value = state.filterValues.dateFrom;
@@ -121,7 +116,15 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
     };
   });
 
-  commit(types.ADD_NEW_RESULTS, zipped);
+  const newItems = zipped.filter(z => {
+    const existingIdx = state.results.findIndex(r => r.url.text === z.url.text);
+    const oooRegex = new RegExp(/^ООО ["]{0,1}[А-Яа-я]/g);
+    const isDefendantOoo = !!z.defendant && oooRegex.test(z.defendant);
+
+    return isDefendantOoo && existingIdx === -1;
+  });
+
+  commit(types.ADD_NEW_RESULTS, newItems);
 
   setTimeout(() => {
     dispatch(`activateNextPage`);
@@ -129,16 +132,14 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
 };
 
 export const activateNextPage = ({ state, commit }) => {
-  // TODO: remove after BAN issue worked around
-  return;
-
-  const idx = state.currentPage + 1;
-  const link = state.selectors.dataQueries.pagerLinks(idx);
-  if (link) {
-    commit(types.SET_CURRENT_PAGE, idx);
-    link.click();
-  } else {
-    console.info(`Next Page link not found. Data extraction stopped!`);
-    chrome.extension.sendMessage({ message: `All pages grabbed! ` });
-  }
+  // TODO: uncomment function body after BAN issue worked around
+  // const idx = state.currentPage + 1;
+  // const link = state.selectors.dataQueries.pagerLinks(idx);
+  // if (link) {
+  //   commit(types.SET_CURRENT_PAGE, idx);
+  //   link.click();
+  // } else {
+  //   console.info(`Next Page link not found. Data extraction stopped!`);
+  //   chrome.extension.sendMessage({ message: `All pages grabbed! ` });
+  // }
 };

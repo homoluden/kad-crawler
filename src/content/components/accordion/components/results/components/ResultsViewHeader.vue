@@ -2,11 +2,6 @@
   <section class="results-view-header">
     <div></div>
     <h1>РЕЗУЛЬТАТЫ</h1>
-    <div class="buttons">
-      <button v-on:click="loadMainData">Получить осн. данные</button>
-      <button>Суммы исков</button>
-      <!-- <button v-on:click="queryContacts">Контакты</button> -->
-    </div>
   </section>
 </template>
 
@@ -45,11 +40,6 @@
 
   & > h1 {
     text-align: center;
-  }
-
-  & > div.buttons {
-    display: flex;
-    justify-content: flex-end;
   }
 }
 </style>
