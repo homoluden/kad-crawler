@@ -18,7 +18,20 @@ export default {
       return !this.$store.state.ui.rootExpanded ? `<<<` : `>>>`;
     },
   },
+  mounted() {
+    const buttonContainer = document.querySelector(`#main-column1 > div.b-form-submitters`);
+    const searchButton = document.querySelector(`#b-form-submit > div > button`);
+    if (buttonContainer && searchButton) {
+      const newButton = searchButton.cloneNode();
+      newButton.innerText = `Автопоиск`;
+      newButton.addEventListener(`click`, this.startSearch);
+      buttonContainer.insertBefore(newButton, buttonContainer.firstChild);
+    }
+  },
   methods: {
+    startSearch() {
+      this.$store.dispatch(`applyFilter`);
+    },
     toggleRoot() {
       this.$store.dispatch(`toggleRoot`);
     },
