@@ -100,7 +100,7 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
     const court = c.querySelector(`td.court`).innerText.replace(`\n`, `, `);
 
     const claimantName = c.querySelector(`td.plaintiff`).innerText;
-    const claimantDetails = c.querySelector(`td.plaintiff span.js-rolloverHtml`).innerText;
+    const claimantDetails = (c.querySelector(`td.plaintiff span.js-rolloverHtml`) || { innerText: `` }).innerText;
     let innMatch = claimantDetails.matchAll(/ИНН: ([\d]{10})/g).next();
     const claimantInn = !!innMatch.value ? innMatch.value[1] : `---`;
     const addressRegex = /\n[\s]*([\d]{6},[\s]+[\s\wА-Яа-я,\.-]+\d)/g;
@@ -108,7 +108,7 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
     const claimantAddress = !!addressMatch.value ? addressMatch.value[1] : `---`;
 
     const defendantName = c.querySelector(`td.respondent`).innerText;
-    const defendantDetails = c.querySelector(`td.respondent span.js-rolloverHtml`).innerText;
+    const defendantDetails = (c.querySelector(`td.respondent span.js-rolloverHtml`) || { innerText: `` }).innerText;
     innMatch = defendantDetails.matchAll(/ИНН: ([\d]{10})/g).next();
     const defendantInn = !!innMatch.value ? innMatch.value[1] : `---`;
     addressMatch = defendantDetails.matchAll(addressRegex).next();
