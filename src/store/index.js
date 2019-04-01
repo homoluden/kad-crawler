@@ -29,6 +29,9 @@ export default new Vuex.Store({
         resultsContainer: () => {
           return document.querySelector('#main-column2 > div.b-results');
         },
+        caseRows: () => {
+          return [...document.querySelectorAll(`#b-cases > tbody > tr`)];
+        },
         date: () => {
           return [...document.querySelectorAll('#b-cases > tbody > tr > td.num > div > div > span')].map(elm => elm.innerText.trim());
         },

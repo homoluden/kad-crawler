@@ -90,43 +90,54 @@ export const applyFilter = ({ state, commit }) => {
 };
 
 export const parseNewResults = ({ state, commit, dispatch }) => {
-  const { date, issueDetailsUrl, courtName, claimant, claimantAddress, claimantInn, defendant, defendantAddress, defendantInn } = state.selectors.dataQueries;
+  const { caseRows } = state.selectors.dataQueries;
 
-  const dateItems = date();
-  const urls = issueDetailsUrl();
-  const courtNames = courtName();
-  const claimants = claimant();
-  const claimantAddresses = claimantAddress();
-  const claimantInns = claimantInn();
-  const defendants = defendant();
-  const defendantAddresses = defendantAddress();
-  const defendantInns = defendantInn();
+  const cases = caseRows().map(c => {
+    const date = c.querySelector(`td.num div.b-container span`).innerText;
+    const link = c.querySelector(`td.num a.num_case`);
+    const href = link.href;
+    const text = link.innerText;
+    const court = c.querySelector(`td.court`).innerText.replace(`\n`, `, `);
 
-  const zipped = dateItems.map((date, i) => {
+    const claimantName = c.querySelector(`td.plaintiff`).innerText;
+    const claimantDetails = c.querySelector(`td.plaintiff span.js-rolloverHtml`).innerText;
+    let innMatch = claimantDetails.matchAll(/ИНН: ([\d]{10})/g).next();
+    const claimantInn = !!innMatch.value ? innMatch.value[1] : `---`;
+    const addressRegex = /\n[\s]*([\d]{6},[\s]+[\s\wА-Яа-я,\.-]+\d)/g;
+    let addressMatch = claimantDetails.matchAll(addressRegex).next();
+    const claimantAddress = !!addressMatch.value ? addressMatch.value[1] : `---`;
+
+    const defendantName = c.querySelector(`td.respondent`).innerText;
+    const defendantDetails = c.querySelector(`td.respondent span.js-rolloverHtml`).innerText;
+    innMatch = defendantDetails.matchAll(/ИНН: ([\d]{10})/g).next();
+    const defendantInn = !!innMatch.value ? innMatch.value[1] : `---`;
+    addressMatch = defendantDetails.matchAll(addressRegex).next();
+    const defendantAddress = !!addressMatch.value ? addressMatch.value[1] : `---`;
+
     return {
       date,
-      url: urls[i],
-      courtName: courtNames[i],
-      claimant: claimants[i],
-      claimantAddress: claimantAddresses[i],
-      claimantInn: claimantInns[i],
+      url: { href, text },
+      courtName: court,
+      claimant: claimantName,
+      claimantAddress: claimantAddress,
+      claimantInn: claimantInn,
       claimantContacts: null,
-      defendant: defendants[i],
-      defendantAddress: defendantAddresses[i],
-      defendantInn: defendantInns[i],
+      defendant: defendantName,
+      defendantAddress: defendantAddress,
+      defendantInn: defendantInn,
       defendantContacts: null,
     };
   });
 
-  const newItems = zipped.filter(z => {
-    const existingIdx = state.results.findIndex(r => r.url.text === z.url.text);
+  const newCases = cases.filter(c => {
+    const existingIdx = state.results.findIndex(r => r.url.text === c.url.text);
     const oooRegex = new RegExp(/^ООО ["]{0,1}[А-Яа-я]/g);
-    const isDefendantOoo = !!z.defendant && oooRegex.test(z.defendant);
+    const isDefendantOoo = !!c.defendant && oooRegex.test(c.defendant);
 
     return isDefendantOoo && existingIdx === -1;
   });
 
-  commit(types.ADD_NEW_RESULTS, newItems);
+  commit(types.ADD_NEW_RESULTS, newCases);
 
   setTimeout(() => {
     dispatch(`activateNextPage`);
