@@ -2,6 +2,10 @@
   <section class="results-view-header">
     <div></div>
     <h1>РЕЗУЛЬТАТЫ</h1>
+    <div class="buttons">
+      <button v-on:click="filterByIssueSumm">Фильтр по сумме</button>
+      <button v-on:click="requestDefendantContacts">Контакты Ответчиков</button>
+    </div>
   </section>
 </template>
 
@@ -18,8 +22,11 @@
       }
     },
     methods: {
-      loadMainData: function() {
-        this.$store.dispatch(`applyFilter`);
+      filterByIssueSumm() {
+        alert(`Фильтр по сумме заказов ещё не реализован!`);
+      },
+      requestDefendantContacts() {
+        this.$store.dispatch(`requestDefendantContacts`);
       },
     },
     computed: {
@@ -40,6 +47,11 @@
 
   & > h1 {
     text-align: center;
+  }
+
+  & > div.buttons {
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

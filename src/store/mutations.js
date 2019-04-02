@@ -38,6 +38,9 @@ export default {
       state.results = state.results.concat(payload);
     }
   },
+  [types.SET_INN_QUEUE](state, payload) {
+    state.innQueue = payload;
+  },
   [types.CLEAR_RESULTS](state) {
     state.results = [];
   },

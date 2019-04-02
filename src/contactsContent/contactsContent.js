@@ -1,5 +1,3 @@
-import { tabRequests } from '../constants/tabs';
-
 global.browser = require('webextension-polyfill');
 
 console.info(`Contacts page loaded.`);

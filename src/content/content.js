@@ -33,5 +33,6 @@ chrome.runtime.onMessage.addListener((message, sender) => {
   if (message.request === tabRequests.processContacts) {
     console.info(`Starting to process received contacts... `, { message });
     store.dispatch(`updateContacts`, message.data);
+    store.dispatch(`queryNextContact`);
   }
 });

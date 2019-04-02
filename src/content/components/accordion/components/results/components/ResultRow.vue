@@ -18,7 +18,6 @@
     <div class="table-cell big inn">
       {{ defendantAddress }}
       <span>ИНН: {{ defendantInn }}</span>
-      <button v-if="!$props.data.defendantContacts" v-on:click="() => this.queryContacts($props.data.defendantInn)">Контакты</button>
       <span v-if="$props.data.defendantContacts"> Рук: {{ $props.data.defendantContacts.head }} </span>
       <span v-if="$props.data.defendantContacts"> Т.: {{ $props.data.defendantContacts.phoneNumbers }} </span>
       <span v-if="$props.data.defendantContacts"> Email: {{ $props.data.defendantContacts.email }} </span>

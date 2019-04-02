@@ -10,6 +10,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     results: [],
+    innQueue: [],
     currentPage: 1,
     courtsFilled: false,
     ui: {

@@ -1,5 +1,5 @@
 import * as types from './mutation-types';
-// import store from '.';
+import { tabRequests } from '../constants/tabs';
 
 export const setFoo = ({ commit }, payload) => {
   commit(types.UPDATE_FOO, payload);
@@ -102,17 +102,17 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
     const claimantName = c.querySelector(`td.plaintiff`).innerText;
     const claimantDetails = (c.querySelector(`td.plaintiff span.js-rolloverHtml`) || { innerText: `` }).innerText;
     let innMatch = claimantDetails.matchAll(/ИНН: ([\d]{10})/g).next();
-    const claimantInn = !!innMatch.value ? innMatch.value[1] : `---`;
-    const addressRegex = /\n[\s]*([\d]{6},[\s]+[\s\wА-Яа-я,\.-]+\d)/g;
+    const claimantInn = innMatch.value ? innMatch.value[1] : `---`;
+    const addressRegex = /\n[\s]*([\d]{6},[\s]+[\s\wА-Яа-я,.-]+\d)/g;
     let addressMatch = claimantDetails.matchAll(addressRegex).next();
-    const claimantAddress = !!addressMatch.value ? addressMatch.value[1] : `---`;
+    const claimantAddress = addressMatch.value ? addressMatch.value[1] : `---`;
 
     const defendantName = c.querySelector(`td.respondent`).innerText;
     const defendantDetails = (c.querySelector(`td.respondent span.js-rolloverHtml`) || { innerText: `` }).innerText;
     innMatch = defendantDetails.matchAll(/ИНН: ([\d]{10})/g).next();
-    const defendantInn = !!innMatch.value ? innMatch.value[1] : `---`;
+    const defendantInn = innMatch.value ? innMatch.value[1] : `---`;
     addressMatch = defendantDetails.matchAll(addressRegex).next();
-    const defendantAddress = !!addressMatch.value ? addressMatch.value[1] : `---`;
+    const defendantAddress = addressMatch.value ? addressMatch.value[1] : `---`;
 
     return {
       date,
@@ -134,7 +134,7 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
     const oooRegex = new RegExp(/^ООО ["]{0,1}[А-Яа-я]/g);
     const isDefendantOoo = !!c.defendant && oooRegex.test(c.defendant);
 
-    return isDefendantOoo && existingIdx === -1;
+    return isDefendantOoo && existingIdx === -1 && c.defendantInn !== `---`;
   });
 
   commit(types.ADD_NEW_RESULTS, newCases);
@@ -145,18 +145,43 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
 };
 
 export const activateNextPage = ({ state, commit }) => {
-  // TODO: uncomment function body after BAN issue worked around
-  // const idx = state.currentPage + 1;
-  // const link = state.selectors.dataQueries.pagerLinks(idx);
-  // if (link) {
-  //   commit(types.SET_CURRENT_PAGE, idx);
-  //   link.click();
-  // } else {
-  //   console.info(`Next Page link not found. Data extraction stopped!`);
-  //   chrome.extension.sendMessage({ message: `All pages grabbed! ` });
-  // }
+  const idx = state.currentPage + 1;
+  const link = state.selectors.dataQueries.pagerLinks(idx);
+  if (link) {
+    commit(types.SET_CURRENT_PAGE, idx);
+    link.click();
+  } else {
+    console.info(`Next Page link not found. Data extraction stopped!`);
+  }
 };
 
 export const updateContacts = ({ state, commit }, payload) => {
   commit(types.UPDATE_CONTACTS, payload);
+};
+
+export const requestDefendantContacts = ({ state, commit, dispatch }) => {
+  const innQueue = state.results.map(r => r.defendantInn).filter(onlyUnique);
+
+  commit(types.SET_INN_QUEUE, innQueue);
+
+  dispatch(`queryNextContact`);
+
+  function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+  }
+};
+
+export const queryNextContact = ({ state, commit }) => {
+  const { innQueue } = state;
+
+  const nextInn = innQueue.shift();
+
+  if (nextInn) {
+    commit(types.SET_INN_QUEUE, innQueue);
+
+    chrome.runtime.sendMessage({
+      request: tabRequests.queryContacts,
+      data: { inn: nextInn },
+    });
+  }
 };
