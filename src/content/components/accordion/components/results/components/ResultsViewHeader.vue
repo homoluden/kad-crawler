@@ -5,6 +5,7 @@
     <div class="buttons">
       <button v-on:click="filterByIssueSumm">Фильтр по сумме</button>
       <button v-on:click="requestDefendantContacts">Контакты Ответчиков</button>
+      <button v-on:click="uploadDefendants">Выгрузить ответчиков</button>
     </div>
   </section>
 </template>
@@ -27,6 +28,9 @@
       },
       requestDefendantContacts() {
         this.$store.dispatch(`requestDefendantContacts`);
+      },
+      uploadDefendants() {
+        this.$store.dispatch(`uploadDefendants`);
       },
     },
     computed: {

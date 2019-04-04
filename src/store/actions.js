@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as types from './mutation-types';
 import { tabRequests } from '../constants/tabs';
 
@@ -145,14 +146,14 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
 };
 
 export const activateNextPage = ({ state, commit }) => {
-  const idx = state.currentPage + 1;
-  const link = state.selectors.dataQueries.pagerLinks(idx);
-  if (link) {
-    commit(types.SET_CURRENT_PAGE, idx);
-    link.click();
-  } else {
-    console.info(`Next Page link not found. Data extraction stopped!`);
-  }
+  // const idx = state.currentPage + 1;
+  // const link = state.selectors.dataQueries.pagerLinks(idx);
+  // if (link) {
+  //   commit(types.SET_CURRENT_PAGE, idx);
+  //   link.click();
+  // } else {
+  //   console.info(`Next Page link not found. Data extraction stopped!`);
+  // }
 };
 
 export const updateContacts = ({ state, commit }, payload) => {
@@ -165,10 +166,6 @@ export const requestDefendantContacts = ({ state, commit, dispatch }) => {
   commit(types.SET_INN_QUEUE, innQueue);
 
   dispatch(`queryNextContact`);
-
-  function onlyUnique(value, index, self) {
-    return self.indexOf(value) === index;
-  }
 };
 
 export const queryNextContact = ({ state, commit }) => {
@@ -185,3 +182,73 @@ export const queryNextContact = ({ state, commit }) => {
     });
   }
 };
+
+export const uploadDefendants = ({ state, commit }) => {
+  const { results } = state;
+
+  const defendants = new Map();
+
+  results
+    .filter(r => !!r.defendantContacts)
+    .forEach(r => {
+      const issueId = r.url.text;
+      const issueUrl = r.url.href;
+
+      const newDefendant = {
+        inn: r.defendantInn,
+        company: r.defendant,
+        address: r.defendantAddress,
+        head: r.defendantContacts.head,
+        phoneNumbers: r.defendantContacts.phoneNumbers,
+        email: r.defendantContacts.email,
+        issues: [{ issueId, issueUrl }],
+      };
+
+      if (defendants.has(newDefendant.inn)) {
+        const existingDefendant = defendants.get(newDefendant.inn);
+        existingDefendant.issues.push({ issueId, issueUrl });
+      } else {
+        defendants.set(newDefendant.inn, newDefendant);
+      }
+    });
+
+  // TODO: generate Bitrix Lead models
+  const def = defendants.values().next().value;
+  const matches = [...def.phoneNumbers.matchAll(/[\d() -]+/g)];
+  const numbers = matches.map(m => m[0].replace(/[ ()-]+/g, ``)) || [];
+
+  const newLead = {
+    TITLE: def.company,
+    NAME: def.head,
+    COMPANY_TITLE: def.company,
+    ADDRESS: def.address,
+    COMMENTS: def.issues.map(issue => `<a href="${issue.issueUrl}">${issue.issueId}</a><br/>`).join(``),
+    PHONE: numbers.map(n => {
+      return { VALUE: n, VALUE_TYPE: `WORK` };
+    }),
+    EMAIL: def.email,
+  };
+
+  axios
+    .post(
+      `https://sarbitr.bitrix24.ru/rest/1/g32qhiwi6wfh2wlx/crm.lead.add.json`,
+      { fields: { ...newLead } },
+      {
+        // headers: {
+        //   'Content-type': 'application/json',
+        // }
+      }
+    )
+    .then(
+      response => {
+        console.log(`[Defendant Upload] SUCCESS => `, response);
+      },
+      err => {
+        console.error(`[Defendant Upload] ERROR => `, err);
+      }
+    );
+};
+
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
