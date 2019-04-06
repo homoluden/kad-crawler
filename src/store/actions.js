@@ -161,7 +161,10 @@ export const updateContacts = ({ state, commit }, payload) => {
 };
 
 export const requestDefendantContacts = ({ state, commit, dispatch }) => {
-  const innQueue = state.results.map(r => r.defendantInn).filter(onlyUnique);
+  const innQueue = state.results
+    .filter(r => !r.defendantContacts)
+    .map(r => r.defendantInn)
+    .filter(onlyUnique);
 
   commit(types.SET_INN_QUEUE, innQueue);
 
@@ -184,11 +187,11 @@ export const queryNextContact = ({ state, commit }) => {
 };
 
 export const uploadDefendants = ({ state, commit }) => {
-  const { results } = state;
+  const defMap = new Map();
 
-  const defendants = new Map();
+  // TODO: block subsequent upload if there is uploading in progress.
 
-  results
+  state.results
     .filter(r => !!r.defendantContacts)
     .forEach(r => {
       const issueId = r.url.text;
@@ -204,19 +207,39 @@ export const uploadDefendants = ({ state, commit }) => {
         issues: [{ issueId, issueUrl }],
       };
 
-      if (defendants.has(newDefendant.inn)) {
-        const existingDefendant = defendants.get(newDefendant.inn);
+      if (defMap.has(newDefendant.inn)) {
+        const existingDefendant = defMap.get(newDefendant.inn);
         existingDefendant.issues.push({ issueId, issueUrl });
       } else {
-        defendants.set(newDefendant.inn, newDefendant);
+        defMap.set(newDefendant.inn, newDefendant);
       }
     });
 
-  // TODO: generate Bitrix Lead models
-  const def = defendants.values().next().value;
+  const leadModels = [...defMap.values()].map(d => generateLeadModel(d));
+  if (leadModels.length) {
+    const uploadTimer = setInterval(() => {
+      if (!leadModels.length) {
+        clearInterval(uploadTimer);
+        console.log(`[Lead Upload] completed.`);
+        return;
+      }
+      const newLead = leadModels.shift();
+      axios.post(`https://sarbitr.bitrix24.ru/rest/1/g32qhiwi6wfh2wlx/crm.lead.add.json`, { fields: { ...newLead } }).then(
+        response => {
+          console.log(`[Lead Upload] SUCCESS => `, response);
+          console.log(`There is ${leadModels.length} Lead Models left in queue.\n`);
+        },
+        err => {
+          console.error(`[Lead Upload] ERROR => `, err);
+        }
+      );
+    }, 5000);
+  }
+};
+
+function generateLeadModel(def) {
   const matches = [...def.phoneNumbers.matchAll(/[\d() -]+/g)];
   const numbers = matches.map(m => m[0].replace(/[ ()-]+/g, ``)) || [];
-
   const newLead = {
     TITLE: def.company,
     NAME: def.head,
@@ -228,26 +251,8 @@ export const uploadDefendants = ({ state, commit }) => {
     }),
     EMAIL: def.email,
   };
-
-  axios
-    .post(
-      `https://sarbitr.bitrix24.ru/rest/1/g32qhiwi6wfh2wlx/crm.lead.add.json`,
-      { fields: { ...newLead } },
-      {
-        // headers: {
-        //   'Content-type': 'application/json',
-        // }
-      }
-    )
-    .then(
-      response => {
-        console.log(`[Defendant Upload] SUCCESS => `, response);
-      },
-      err => {
-        console.error(`[Defendant Upload] ERROR => `, err);
-      }
-    );
-};
+  return newLead;
+}
 
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
