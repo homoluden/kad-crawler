@@ -146,14 +146,14 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
 };
 
 export const activateNextPage = ({ state, commit }) => {
-  // const idx = state.currentPage + 1;
-  // const link = state.selectors.dataQueries.pagerLinks(idx);
-  // if (link) {
-  //   commit(types.SET_CURRENT_PAGE, idx);
-  //   link.click();
-  // } else {
-  //   console.info(`Next Page link not found. Data extraction stopped!`);
-  // }
+  const idx = state.currentPage + 1;
+  const link = state.selectors.dataQueries.pagerLinks(idx);
+  if (link) {
+    commit(types.SET_CURRENT_PAGE, idx);
+    link.click();
+  } else {
+    console.info(`Next Page link not found. Data extraction stopped!`);
+  }
 };
 
 export const updateContacts = ({ state, commit }, payload) => {
