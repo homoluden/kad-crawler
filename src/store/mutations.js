@@ -16,6 +16,9 @@ export default {
   [types.UPDATE_DOM_OBSERVER](state, payload) {
     state.ui.domObserver = payload;
   },
+  [types.UPDATE_CLAIM_SUM](state, payload) {
+    state.ui.domObserver = payload;
+  },
   [types.UPDATE_CONTACTS](state, payload) {
     const { inn: innToUpdate, contacts } = payload;
     const recordsWithInn = [];
@@ -32,6 +35,12 @@ export default {
       }
     });
     console.info(`[Main Tab] Records with INN given: `, recordsWithInn);
+  },
+  [types.UPDATE_CLAIM_SUM](state, { claimId, claimSum }) {
+    const claimIndex = state.results.findIndex(r => r.url.text === claimId);
+    if (claimIndex > -1) {
+      state.results[claimIndex].url = { ...state.results[claimIndex].url, claimSum };
+    }
   },
   [types.ADD_NEW_RESULTS](state, payload) {
     if (payload.length) {

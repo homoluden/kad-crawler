@@ -237,6 +237,18 @@ export const uploadDefendants = ({ state, commit }) => {
   }
 };
 
+export const setClaimSum = ({ state, commit }, { claimId, claimSum }) => {
+  commit(types.UPDATE_CLAIM_SUM, { claimId, claimSum });
+};
+
+export const deleteClaim = ({ state, commit }, { claimId }) => {
+  const claimIndex = state.results.findIndex(r => r.url.text === claimId);
+  if (claimIndex > -1) {
+    const removed = state.results.splice(claimIndex, 1);
+    console.log(`[Delete Claim]:\n`, { removed });
+  }
+};
+
 function generateLeadModel(def) {
   const matches = [...def.phoneNumbers.matchAll(/[\d() -]+/g)];
   const numbers = matches.map(m => m[0].replace(/[ ()-]+/g, ``)) || [];

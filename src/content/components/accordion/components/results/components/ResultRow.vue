@@ -3,6 +3,8 @@
     <div class="table-cell date">
       {{ date }}
       <a v-bind:href="url.href">{{ url.text }}</a>
+      <span v-if="$props.data.url.claimSum"> Сумма иска: {{ $props.data.url.claimSum }} </span>
+      <button v-on:click="removeThisRow">Удалить</button>
     </div>
     <div class="table-cell medium">{{ courtName }}</div>
     <div class="table-cell medium">{{ claimant }}</div>
@@ -47,6 +49,10 @@
       }
     },
     methods: {
+      removeThisRow: function() {
+        const claimId = this.$props.data.url.text;
+        this.$store.dispatch(`deleteClaim`, { claimId });
+      },
       queryContacts: function(inn) {
         chrome.runtime.sendMessage(
           {

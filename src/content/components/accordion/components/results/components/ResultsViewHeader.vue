@@ -24,7 +24,42 @@
     },
     methods: {
       filterByIssueSumm() {
-        alert(`Фильтр по сумме заказов ещё не реализован!`);
+        const { results } = this.$store.state;
+
+        const claimLinks = results.filter(r => !r.url.claimSum ).map(r => {
+          const { url } = r;
+          const lnk = {...url};
+          lnk.href = lnk.href.replace(`/Card/`, `/PrintCard/`);
+          return lnk;
+        });
+        const filterTimer = setInterval(() => {
+          const claimLink = claimLinks.shift();
+          if (!claimLink) {
+            clearInterval(filterTimer);
+            return;
+          }
+
+          const headers = new Headers({
+            "Accept": "application/json, text/javascript, */*",
+            "X-Requested-With": "XMLHttpRequest"
+          })
+          fetch(claimLink.href, { headers })
+            .then(res => res.json())
+            .then((claimResponse) => {
+              const { Result } = claimResponse || {};
+              const { ClaimSum } = Result;
+              if (ClaimSum && ClaimSum > 300000) {
+                this.$store.dispatch(`setClaimSum`, { claimId: claimLink.text, claimSum: ClaimSum });
+              } else {
+                this.$store.dispatch(`deleteClaim`, { claimId: claimLink.text });
+              }
+            },
+            (err) => {
+              clearInterval(filterTimer);
+              console.warn(`[Filter by Sum] Error:\n`, err);
+              alert(`Запрос суммы дела отвергнут. Откройте любое дело в новой вкладке и введите капчу. После успешного завершения проверки снова запустите фильтр по сумме дела.`);
+            });
+        }, 10100);
       },
       requestDefendantContacts() {
         this.$store.dispatch(`requestDefendantContacts`);
