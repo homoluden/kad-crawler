@@ -4,25 +4,23 @@ global.browser = require('webextension-polyfill');
 
 console.info(`Contact Details page loaded.`);
 
-const innStr = document
-  .querySelector(`body > div.main > div.container.clearfix > div > div:nth-child(3) > table > tbody > tr:nth-child(2) > td:nth-child(2)`)
-  .innerText.split(' / ')[0];
-const headStr = document.querySelector(`div.main > div.container.clearfix table.tt tr:nth-child(1) a.upper`).innerText;
-const emailStrFull = document.querySelector(`body > div.main > div.container.clearfix > div > div:nth-child(6) > p:nth-child(3) > i`).innerText;
-const emailStr = emailStrFull.split(`:`)[1];
+const innerTexts = [...document.querySelectorAll(`div.c2m`)].map(node => node.innerText);
+
+const innStr = extractInn(innerTexts);
 
 if (innStr) {
-  const phoneNumbers = [...document.querySelectorAll(`div.c2m > p > a.nwra.lbs64`)].map(elm => elm.innerText);
-  const phoneNumbersStr = phoneNumbers.join(`, `);
+  const headStr = extractHead(innerTexts);
+  const emailStr = extractEmail(innerTexts);
+  const phoneNumbers = extractPhoneNumbers(innerTexts);
 
   chrome.runtime.sendMessage({
     request: tabRequests.processContacts,
     data: {
       inn: innStr,
       contacts: {
-        phoneNumbers: phoneNumbersStr || `---`,
-        head: headStr || `---`,
-        email: emailStr || `---`,
+        phoneNumbers: phoneNumbers,
+        head: headStr,
+        email: emailStr,
       },
     },
   });
@@ -35,4 +33,84 @@ if (innStr) {
     params.set('val', message.inn);
     window.location = `${url.pathname}?${params}`;
   });
+}
+
+function extractInn(innerTexts) {
+  const innStrRegex = /ИНН: [\d]{10}/g;
+  let inn = null;
+
+  var BreakException = {};
+  try {
+    innerTexts.forEach(text => {
+      const matches = text.match(innStrRegex);
+      if (matches && matches.length > 0) {
+        inn = matches[0].replace(`ИНН: `, ``);
+        throw BreakException;
+      }
+    });
+  } catch (e) {
+    if (e !== BreakException) throw e;
+  }
+
+  return inn;
+}
+
+function extractHead(innerTexts) {
+  const headStrRegex = /Руководитель:\t.+/g;
+  let head = null;
+
+  var BreakException = {};
+  try {
+    innerTexts.forEach(text => {
+      const matches = text.match(headStrRegex);
+      if (matches && matches.length > 0) {
+        head = matches[0].replace(`Руководитель:\t`, ``);
+        throw BreakException;
+      }
+    });
+  } catch (e) {
+    if (e !== BreakException) throw e;
+  }
+
+  return head;
+}
+
+function extractEmail(innerTexts) {
+  const emailStrRegex = /E-mail:[ ]{0,1}.*/g;
+  let email = null;
+
+  var BreakException = {};
+  try {
+    innerTexts.forEach(text => {
+      const matches = text.match(emailStrRegex);
+      if (matches && matches.length > 0) {
+        email = matches[0].replace(`E-mail:`, ``).trim();
+        throw BreakException;
+      }
+    });
+  } catch (e) {
+    if (e !== BreakException) throw e;
+  }
+
+  return email && email.length ? email : `---`;
+}
+
+function extractPhoneNumbers(innerTexts) {
+  const phoneStrRegex = /Телефон:[ ]{0,1}.*/g;
+  let phone = null;
+
+  var BreakException = {};
+  try {
+    innerTexts.forEach(text => {
+      const matches = text.match(phoneStrRegex);
+      if (matches && matches.length > 0) {
+        phone = matches[0].replace(`Телефон:`, ``).trim();
+        throw BreakException;
+      }
+    });
+  } catch (e) {
+    if (e !== BreakException) throw e;
+  }
+
+  return phone && phone.length ? phone : `---`;
 }

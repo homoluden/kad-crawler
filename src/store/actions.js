@@ -249,6 +249,32 @@ export const deleteClaim = ({ state, commit }, { claimId }) => {
   }
 };
 
+export const removeEmptyPhones = ({ state, dispatch }) => {
+  const { results } = state;
+  const noPhoneClaims = results.filter(r => r.defendantContacts && r.defendantContacts.phoneNumbers === `---`).map(r => r.url.text);
+  noPhoneClaims.forEach(claimId => dispatch(`deleteClaim`, { claimId }));
+};
+
+export const removeSameCity = ({ state, dispatch }) => {
+  const { results } = state;
+  const sameCityClaims = results.filter(r => getIsSameCities(r)).map(r => r.url.text);
+  sameCityClaims.forEach(claimId => dispatch(`deleteClaim`, { claimId }));
+};
+
+function getIsSameCities(claim) {
+  const zipRegex = /^([\d]{6}), Россия/gm;
+  const addresses = `${claim.claimantAddress}\n${claim.defendantAddress}`;
+  const matches = addresses.match(zipRegex);
+
+  if (matches.length === 2) {
+    const city1 = matches[0].slice(0, 3);
+    const city2 = matches[1].slice(0, 3);
+    return city1 === city2;
+  }
+
+  return false;
+}
+
 function generateLeadModel(def) {
   const matches = [...def.phoneNumbers.matchAll(/[\d() -]+/g)];
   const numbers = matches.map(m => m[0].replace(/[ ()-]+/g, ``)) || [];

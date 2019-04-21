@@ -3,8 +3,10 @@
     <div></div>
     <h1>РЕЗУЛЬТАТЫ</h1>
     <div class="buttons">
+      <button v-on:click="filterByCitySumm">Фильтр по городам</button>
       <button v-on:click="filterByIssueSumm">Фильтр по сумме</button>
       <button v-on:click="requestDefendantContacts">Контакты Ответчиков</button>
+      <button v-on:click="filterByPhoneSumm">Фильтр по тел-ам</button>
       <button v-on:click="uploadDefendants">Выгрузить ответчиков</button>
     </div>
   </section>
@@ -60,6 +62,12 @@
               alert(`Запрос суммы дела отвергнут. Откройте любое дело в новой вкладке и введите капчу. После успешного завершения проверки снова запустите фильтр по сумме дела.`);
             });
         }, 10100);
+      },
+      filterByPhoneSumm() {
+        this.$store.dispatch(`removeEmptyPhones`);
+      },
+      filterByCitySumm() {
+        this.$store.dispatch(`removeSameCity`);
       },
       requestDefendantContacts() {
         this.$store.dispatch(`requestDefendantContacts`);
