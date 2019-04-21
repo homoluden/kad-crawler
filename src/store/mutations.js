@@ -45,6 +45,7 @@ export default {
   [types.ADD_NEW_RESULTS](state, payload) {
     if (payload.length) {
       state.results = state.results.concat(payload);
+      state.filteredResults = state.filteredResults.concat(payload.filter(r => !r.removed));
     }
   },
   [types.SET_INN_QUEUE](state, payload) {
@@ -52,6 +53,7 @@ export default {
   },
   [types.CLEAR_RESULTS](state) {
     state.results = [];
+    state.filteredResults = [];
   },
   [types.SET_CURRENT_PAGE](state, payload) {
     state.currentPage = payload;

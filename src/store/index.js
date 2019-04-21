@@ -10,6 +10,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     results: [],
+    filteredResults: [],
+    sameCityFilter: `all`,
     innQueue: [],
     currentPage: 1,
     courtsFilled: false,
@@ -78,7 +80,8 @@ export default new Vuex.Store({
       participants: `ООО`,
       dateFrom: getters.startDate(),
       dateTo: getters.endDate(),
-      courts: `АС Алтайского края
+      courts: `НЕ УДАЛЯТЬ ЭТУ СТРОЧКУ
+      АС Алтайского края
       АС Архангельской области
       АС Астраханской области
       АС Белгородская область

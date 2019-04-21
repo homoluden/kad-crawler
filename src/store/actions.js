@@ -82,7 +82,7 @@ export const applyFilter = ({ state, commit }) => {
         court.value = name;
         addCourt.click();
       }
-    }, 250);
+    }, 350);
   } else {
     if (submitButton) {
       submitButton.click();
@@ -192,7 +192,7 @@ export const uploadDefendants = ({ state, commit }) => {
   // TODO: block subsequent upload if there is uploading in progress.
 
   state.results
-    .filter(r => !!r.defendantContacts)
+    .filter(r => !!r.defendantContacts && !r.removed)
     .forEach(r => {
       const issueId = r.url.text;
       const issueUrl = r.url.href;
@@ -241,11 +241,21 @@ export const setClaimSum = ({ state, commit }, { claimId, claimSum }) => {
   commit(types.UPDATE_CLAIM_SUM, { claimId, claimSum });
 };
 
-export const deleteClaim = ({ state, commit }, { claimId }) => {
-  const claimIndex = state.results.findIndex(r => r.url.text === claimId);
+export const deleteClaim = ({ state, commit }, { claimId, permanent = true }) => {
+  const { results } = state;
+  const claimIndex = results.findIndex(r => r.url.text === claimId);
   if (claimIndex > -1) {
-    const removed = state.results.splice(claimIndex, 1);
-    console.log(`[Delete Claim]:\n`, { removed });
+    if (permanent) {
+      const removed = results.splice(claimIndex, 1);
+      console.log(`[Delete Claim]:\n`, { removed });
+    } else {
+      const hidden = results[claimIndex];
+      hidden.removed = true;
+      console.log(`[Hide Claim]:\n`, { hidden });
+    }
+
+    commit(types.CLEAR_RESULTS);
+    commit(types.ADD_NEW_RESULTS, results);
   }
 };
 
@@ -255,10 +265,33 @@ export const removeEmptyPhones = ({ state, dispatch }) => {
   noPhoneClaims.forEach(claimId => dispatch(`deleteClaim`, { claimId }));
 };
 
-export const removeSameCity = ({ state, dispatch }) => {
+export const removeSameCity = ({ state, commit, dispatch }) => {
   const { results } = state;
-  const sameCityClaims = results.filter(r => getIsSameCities(r)).map(r => r.url.text);
-  sameCityClaims.forEach(claimId => dispatch(`deleteClaim`, { claimId }));
+
+  if (state.sameCityFilter === `all`) {
+    state.sameCityFilter = `difCity`;
+  } else if (state.sameCityFilter === `difCity`) {
+    state.sameCityFilter = `sameCity`;
+  } else {
+    state.sameCityFilter = `all`;
+  }
+
+  console.log(`[Same City Filter]: ${state.sameCityFilter}\n`);
+
+  results.forEach(r => {
+    r.removed = false;
+    const isSameCity = getIsSameCities(r);
+    if (state.sameCityFilter === `difCity` && isSameCity) {
+      dispatch(`deleteClaim`, { claimId: r.url.text, permanent: false });
+    } else if (state.sameCityFilter === `sameCity` && !isSameCity) {
+      dispatch(`deleteClaim`, { claimId: r.url.text, permanent: false });
+    }
+  });
+
+  if (state.sameCityFilter === `all`) {
+    commit(types.CLEAR_RESULTS);
+    commit(types.ADD_NEW_RESULTS, results);
+  }
 };
 
 function getIsSameCities(claim) {

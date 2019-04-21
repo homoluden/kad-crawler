@@ -2,7 +2,7 @@
   <section class="results-table">
     <results-table-header />
     <ul v-if="resultsAvailable">
-      <li is="result-row" v-for="(result, index) in $store.state.results" v-bind:key="result.url.text" v-bind:index="index" v-bind:data="result" />
+      <li is="result-row" v-for="(result, index) in $store.state.filteredResults" v-bind:key="result.url.text" v-bind:index="index" v-bind:data="result" />
     </ul>
   </section>
 </template>
