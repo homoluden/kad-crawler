@@ -40,6 +40,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case tabRequests.processContacts:
       const { id: mainTabId } = tabs.main || {};
       if (!mainTabId) {
+        chrome.tabs.query({ url: '*://kad.arbitr.ru/' }, matchingTabs => {
+          console.info(`Main tab wasn't self-registered. Main Tab query performed\n`, `Matching Tabs:\n`, matchingTabs);
+          if (matchingTabs.length) {
+            tabs.main = matchingTabs[matchingTabs.length - 1];
+          }
+        });
         break;
       }
 

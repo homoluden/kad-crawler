@@ -80,7 +80,9 @@ export const applyFilter = ({ state, commit }) => {
       const name = courtNames.shift();
       if (addCourt) {
         court.value = name;
-        addCourt.click();
+        setTimeout(() => {
+          addCourt.click();
+        }, 100);
       }
     }, 350);
   } else {
@@ -104,7 +106,7 @@ export const parseNewResults = ({ state, commit, dispatch }) => {
     const claimantDetails = (c.querySelector(`td.plaintiff span.js-rolloverHtml`) || { innerText: `` }).innerText;
     let innMatch = claimantDetails.matchAll(/ИНН: ([\d]{10})/g).next();
     const claimantInn = innMatch.value ? innMatch.value[1] : `---`;
-    const addressRegex = /\n[\s]*([\d]{6},[\s]+[\s\wА-Яа-я,.-]+\d)/g;
+    const addressRegex = /\n[\s]*([\d]{6},[\s]+[\s\wА-Яа-я,.\/-]+)\n/g;
     let addressMatch = claimantDetails.matchAll(addressRegex).next();
     const claimantAddress = addressMatch.value ? addressMatch.value[1] : `---`;
 
@@ -191,7 +193,7 @@ export const uploadDefendants = ({ state, commit }) => {
 
   // TODO: block subsequent upload if there is uploading in progress.
 
-  state.results
+  state.filteredResults
     .filter(r => !!r.defendantContacts && !r.removed)
     .forEach(r => {
       const issueId = r.url.text;
@@ -295,11 +297,11 @@ export const removeSameCity = ({ state, commit, dispatch }) => {
 };
 
 function getIsSameCities(claim) {
-  const zipRegex = /^([\d]{6}), Россия/gm;
+  const zipRegex = /^([\d]{6}), /gm;
   const addresses = `${claim.claimantAddress}\n${claim.defendantAddress}`;
   const matches = addresses.match(zipRegex);
 
-  if (matches.length === 2) {
+  if (matches && matches.length === 2) {
     const city1 = matches[0].slice(0, 3);
     const city2 = matches[1].slice(0, 3);
     return city1 === city2;

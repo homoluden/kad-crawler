@@ -43,7 +43,7 @@
 .results-table {
   margin: 1%;
   width: 98%;
-  height: 98%;
+  height: calc(98% - 60px);
   display: flex;
   flex-direction: column;
   justify-content: start;

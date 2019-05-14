@@ -1,7 +1,7 @@
 <template lang="html">
   <section class="results-view-header">
     <div></div>
-    <h1>РЕЗУЛЬТАТЫ</h1>
+    <h1>РЕЗУЛЬТАТЫ ({{ resultCount }})</h1>
     <div class="buttons">
       <button v-on:click="filterByCitySumm">Фильтр по городам</button>
       <button v-on:click="filterByIssueSumm">Фильтр по сумме</button>
@@ -61,7 +61,7 @@
               console.warn(`[Filter by Sum] Error:\n`, err);
               alert(`Запрос суммы дела отвергнут. Откройте любое дело в новой вкладке и введите капчу. После успешного завершения проверки снова запустите фильтр по сумме дела.`);
             });
-        }, 10100);
+        }, 7100);
       },
       filterByPhoneSumm() {
         this.$store.dispatch(`removeEmptyPhones`);
@@ -77,7 +77,10 @@
       },
     },
     computed: {
-
+      resultCount: function() {
+        const { filteredResults } = this.$store.state;
+        return filteredResults.length;
+      }
     }
 }
 </script>
